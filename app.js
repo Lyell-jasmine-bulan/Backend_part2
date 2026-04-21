@@ -37,7 +37,7 @@ app.use((req, res,) => {
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import userRoutes from './routers/UserRoutes.js';  // Correct import with .js extension
+import userRoutes from './routes/UserRoutes.js';  // Correct import with .js extension
 
 dotenv.config();
 

@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
-import * as UserModel from '../model/UserModel.js';
+import * as UserModel from "../model/UserModels.js";
 
-
-const authHandler = async (req, res, next) => {
+export const authHandler = async (req, res, next) => {
     const { authorization } = req.headers;
-
     if (!authorization) {
         return res.status(401).json({
             success: false,
@@ -15,24 +13,22 @@ const authHandler = async (req, res, next) => {
     const token = authorization.split(" ")[1];
 
     try {
-        const { id } = jwt.verify(token, process.env.SECRET);
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await UserModel.getUser(payload.id);
 
-        const [user] = await UserModel.getUser(id);
-        if (!user) {
+        if (!user || user.length === 0) {
             return res.status(401).json({
                 success: false,
-                message: [{ result: "User not found" }]
+                message: [{ result: "Request is unauthorized." }]
             });
         }
-
-        req.user = user.id;
+        req.user = user[0]; // attach the first (and only) user row
         next();
     } catch (err) {
+        console.log(err);
         return res.status(401).json({
             success: false,
-            message: [{ result: "Request is unauthorized" }]
+            message: [{ result: "Request is unauthorized." }]
         });
     }
-};
-
-export default authHandler;
+}

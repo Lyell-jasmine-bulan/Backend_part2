@@ -1,10 +1,13 @@
-import * as UserController from '../controllers/UserController.js';
-import express from "express";
+
+import express from 'express';
+import * as UsersController from '../controllers/userControllers.js';
+import { authHandler } from '../middleware/authHandler.js';
 
 
-const UserRoutes = express.Router();
+const UsersRoutes = express.Router();
 
-UserRoutes.post('/register', UserController.register);
-UserRoutes.post('/login', UserController.login);
 
-export default UserRoutes;
+UsersRoutes.post('/register', UsersController.registerUser);
+UsersRoutes.post('/login', UsersController.loginUser);
+
+export default UsersRoutes;
